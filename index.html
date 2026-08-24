@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Brew & Beans — Premium Coffee & Cafe</title>
+
+    <meta name="description"
+          content="Nikmati kopi premium, makanan lezat, dan suasana cafe yang nyaman di Brew & Beans.">
+
+    <meta name="keywords"
+          content="cafe, coffee shop, kopi, cafe Indonesia, Brew and Beans">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="header" id="header">
+
+    <div class="container nav">
+
+        <a href="index.html" class="logo">
+            <span class="logo-icon">B</span>
+
+            <span>
+                BREW
+                <small>&</small>
+                BEANS
+            </span>
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-menu" id="navMenu" role="navigation">
+
+            <a href="index.html" class="active">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+
+        </nav>
+
+        <div class="nav-actions">
+
+            <button class="nav-icon" id="searchButton">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <button class="nav-icon cart-button" id="cartButton">
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                <span id="cartCount">0</span>
+
+            </button>
+
+            <a href="menu.html" class="btn btn-dark nav-order">
+                Order Now
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-image"></div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+
+        <p class="eyebrow">
+            PREMIUM COFFEE EXPERIENCE
+        </p>
+
+        <h1>
+            Good Coffee,
+            <em>Good Mood.</em>
+        </h1>
+
+        <p class="hero-description">
+            Nikmati kopi pilihan terbaik dan makanan favorit
+            dalam suasana cafe yang hangat, nyaman, dan penuh cerita.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="menu.html" class="btn btn-light">
+                Explore Menu
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+            <button class="btn btn-outline-light" data-open-cart>
+                View Cart
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="scroll-down">
+        <span>SCROLL TO EXPLORE</span>
+        <i class="fa-solid fa-arrow-down"></i>
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <p class="eyebrow brown">
+                WHY BREW & BEANS
+            </p>
+
+            <h2>
+                More Than Just
+                <em>Coffee</em>
+            </h2>
+
+            <p>
+                Setiap detail kami siapkan untuk membuat
+                waktu minum kopi terasa lebih menyenangkan.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+
+                <h3>Premium Coffee</h3>
+
+                <p>
+                    Biji kopi pilihan yang diproses
+                    dengan penuh perhatian.
+                </p>
+
+            </article>
+
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+
+                <h3>Fresh Ingredients</h3>
+
+                <p>
+                    Menggunakan bahan segar untuk
+                    rasa yang lebih nikmat.
+                </p>
+
+            </article>
+
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-couch"></i>
+                </div>
+
+                <h3>Cozy Place</h3>
+
+                <p>
+                    Tempat nyaman untuk bekerja,
+                    ngobrol, atau sekadar bersantai.
+                </p>
+
+            </article>
+
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <h3>Friendly Service</h3>
+
+                <p>
+                    Pelayanan ramah yang membuat
+                    setiap kunjungan terasa berbeda.
+                </p>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FAVORITE MENU ================= -->
+
+<section class="menu-preview section">
+
+    <div class="container">
+
+        <div class="section-heading split-heading">
+
+            <div>
+
+                <p class="eyebrow brown">
+                    OUR FAVORITE MENU
+                </p>
+
+                <h2>
+                    Made With
+                    <em>Passion</em>
+                </h2>
+
+            </div>
+
+            <a href="menu.html" class="text-link">
+                View All Menu
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+        <div class="products-grid">
+
+            <article class="product-card" data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy"
+                        src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=85"
+                        alt="Espresso">
+
+                    <span class="product-tag">
+                        BEST SELLER
+                    </span>
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Espresso</h3>
+
+                    <p>
+                        Kopi espresso dengan aroma kuat
+                        dan karakter yang intens.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 25.000</strong>
+
+                        <button
+                            class="add-cart"
+                            data-id="1"
+                            data-name="Espresso"
+                            data-price="25000"
+                            data-image="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="product-card" data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy"
+                        src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=85"
+                        alt="Cappuccino">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Cappuccino</h3>
+
+                    <p>
+                        Espresso creamy dengan
+                        foam susu lembut.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 30.000</strong>
+
+                        <button
+                            class="add-cart"
+                            data-id="2"
+                            data-name="Cappuccino"
+                            data-price="30000"
+                            data-image="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="product-card" data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy"
+                        src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=85"
+                        alt="Cafe Latte">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Cafe Latte</h3>
+
+                    <p>
+                        Espresso dengan susu creamy
+                        yang lembut dan ringan.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 32.000</strong>
+
+                        <button
+                            class="add-cart"
+                            data-id="3"
+                            data-name="Cafe Latte"
+                            data-price="32000"
+                            data-image="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <article class="product-card" data-category="food">
+
+                <div class="product-image">
+
+                    <img loading="lazy"
+                        src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=85"
+                        alt="Croissant">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Croissant</h3>
+
+                    <p>
+                        Croissant renyah dengan
+                        tekstur buttery.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 25.000</strong>
+
+                        <button
+                            class="add-cart"
+                            data-id="7"
+                            data-name="Croissant"
+                            data-price="25000"
+                            data-image="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STORY ================= -->
+
+<section class="story section">
+
+    <div class="container story-grid">
+
+        <div class="story-image">
+
+            <img loading="lazy"
+                src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=85"
+                alt="Interior Brew and Beans Cafe">
+
+            <div class="story-badge">
+
+                <strong>10+</strong>
+
+                <span>
+                    Years of<br>
+                    Experience
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="story-content">
+
+            <p class="eyebrow brown">
+                OUR STORY
+            </p>
+
+            <h2>
+                A Place For
+                <em>Good Moments</em>
+            </h2>
+
+            <p>
+                BREW & BEANS lahir dari kecintaan terhadap
+                kopi berkualitas dan tempat yang nyaman
+                untuk berbagi cerita.
+            </p>
+
+            <p>
+                Kami percaya bahwa secangkir kopi bukan
+                sekadar minuman. Kopi adalah alasan untuk
+                berhenti sejenak, berbicara, dan menikmati
+                momen bersama.
+            </p>
+
+            <a href="about.html" class="btn btn-dark">
+                Discover Our Story
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+            <div class="stats">
+
+                <div>
+                    <strong>50+</strong>
+                    <span>Coffee Variations</span>
+                </div>
+
+                <div>
+                    <strong>10K+</strong>
+                    <span>Happy Customers</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PROMO ================= -->
+
+<section class="promo">
+
+    <div class="promo-image"></div>
+
+    <div class="promo-overlay"></div>
+
+    <div class="container promo-content">
+
+        <p class="eyebrow">
+            SPECIAL OFFER
+        </p>
+
+        <h2>
+            Your Morning
+            Deserves Better Coffee.
+        </h2>
+
+        <p>
+            Dapatkan promo spesial untuk pembelian
+            menu kopi pilihan.
+        </p>
+
+        <a href="menu.html" class="btn btn-light">
+            Get Special Offer
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= TESTIMONIAL ================= -->
+
+<section class="testimonial section">
+
+    <div class="container">
+
+        <div class="section-heading center">
+
+            <p class="eyebrow brown">
+                CUSTOMER STORIES
+            </p>
+
+            <h2>
+                Loved By
+                <em>Many</em>
+            </h2>
+
+        </div>
+
+
+        <div class="testimonial-grid">
+
+            <article class="testimonial-card">
+
+                <div class="stars">
+                    ★★★★★
+                </div>
+
+                <p>
+                    "Coffee-nya enak banget dan tempatnya
+                    nyaman. Cocok buat kerja atau ngobrol."
+                </p>
+
+                <strong>— Andi</strong>
+
+            </article>
+
+
+            <article class="testimonial-card">
+
+                <div class="stars">
+                    ★★★★★
+                </div>
+
+                <p>
+                    "Latte-nya creamy dan pelayanan
+                    sangat ramah. Pasti balik lagi."
+                </p>
+
+                <strong>— Sarah</strong>
+
+            </article>
+
+
+            <article class="testimonial-card">
+
+                <div class="stars">
+                    ★★★★★
+                </div>
+
+                <p>
+                    "Tempat favorit saya untuk menikmati
+                    kopi sore sambil santai."
+                </p>
+
+                <strong>— Dimas</strong>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="gallery-wrap section">
+
+    <div class="container">
+
+        <div class="section-heading center">
+            <p class="eyebrow brown">INSTAGRAM</p>
+            <h2>Life At <em>Brew & Beans</em></h2>
+        </div>
+
+        <div class="gallery-grid">
+            <figure class="gallery-item">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80" alt="Coffee preparation">
+                <span class="insta"><i class="fa-brands fa-instagram"></i></span>
+                <figcaption class="tag">@brewandbeans</figcaption>
+            </figure>
+
+            <figure class="gallery-item">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=900&q=80" alt="Coffee cups">
+                <span class="insta"><i class="fa-brands fa-instagram"></i></span>
+                <figcaption class="tag">@brewandbeans</figcaption>
+            </figure>
+
+            <figure class="gallery-item">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=900&q=80" alt="Cafe interior">
+                <span class="insta"><i class="fa-brands fa-instagram"></i></span>
+                <figcaption class="tag">@brewandbeans</figcaption>
+            </figure>
+
+            <figure class="gallery-item">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=80" alt="Latte art coffee">
+                <span class="insta"><i class="fa-brands fa-instagram"></i></span>
+                <figcaption class="tag">@brewandbeans</figcaption>
+            </figure>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="cta">
+    <div class="cta-image"></div>
+    <div class="cta-overlay"></div>
+    <div class="cta-inner">
+        <p class="eyebrow">FIND YOUR NEXT FAVORITE CUP</p>
+        <h2>Your Next Favorite Cup Is Waiting.</h2>
+        <p>From slow mornings to cozy catch-ups, every sip is made to feel like a small ritual worth savoring.</p>
+        <div class="cta-buttons">
+            <a href="menu.html" class="btn btn-light">Order Now</a>
+            <a href="contact.html" class="btn btn-outline-light">Visit Us</a>
+        </div>
+    </div>
+</section>
+
+</main>
+
+
+<!-- ================= CART ================= -->
+
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<aside class="cart-sidebar" id="cartSidebar">
+
+    <div class="cart-header">
+
+        <h2>Your Cart</h2>
+
+        <button id="closeCart">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="cart-items" id="cartItems">
+
+        <div class="empty-cart">
+
+            <i class="fa-solid fa-bag-shopping"></i>
+
+            <p>
+                Keranjang masih kosong.
+            </p>
+
+            <a href="menu.html" class="btn btn-dark">
+                Explore Menu
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="cart-footer">
+
+        <div class="cart-total">
+
+            <span>Total</span>
+
+            <strong id="cartTotal">
+                Rp 0
+            </strong>
+
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn">
+            Order via WhatsApp
+            <i class="fa-brands fa-whatsapp"></i>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <a href="index.html" class="logo footer-logo">
+
+                <span class="logo-icon">B</span>
+
+                <span>
+                    BREW
+                    <small>&</small>
+                    BEANS
+                </span>
+
+            </a>
+
+            <p>
+                Good Coffee.
+                Good Mood.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>Quick Links</h4>
+
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+
+        </div>
+
+
+        <div>
+
+            <h4>Opening Hours</h4>
+
+            <p>
+                Monday - Friday<br>
+                08.00 - 22.00
+            </p>
+
+            <p>
+                Saturday - Sunday<br>
+                08.00 - 23.00
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>Follow Us</h4>
+
+            <div class="socials">
+
+                <a href="#">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <div class="container">
+
+            <p>
+                © 2026 Brew & Beans.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<script src="script.js"></script>
+
+</body>
+</html>

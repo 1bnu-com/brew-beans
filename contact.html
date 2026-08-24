@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Contact — Brew & Beans</title>
+
+    <meta name="description"
+          content="Hubungi Brew & Beans Coffee Shop.">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<header class="header" id="header">
+
+    <div class="container nav">
+
+        <a href="index.html" class="logo">
+
+            <span class="logo-icon">B</span>
+
+            <span>
+                BREW
+                <small>&</small>
+                BEANS
+            </span>
+
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-menu" id="navMenu" role="navigation">
+
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">
+                Contact
+            </a>
+
+        </nav>
+
+        <div class="nav-actions">
+
+            <button class="nav-icon cart-button"
+                    id="cartButton">
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                <span id="cartCount">0</span>
+
+            </button>
+
+            <a href="menu.html"
+               class="btn btn-dark nav-order">
+                Order Now
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="page-hero">
+
+    <div class="container">
+
+        <p class="eyebrow brown">
+            GET IN TOUCH
+        </p>
+
+        <h1>
+            Let's Talk
+            <em>Coffee.</em>
+        </h1>
+
+        <p>
+            Ada pertanyaan? Kami siap membantu.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="contact-section section">
+
+    <div class="container contact-grid">
+
+
+        <!-- INFO -->
+
+        <div class="contact-info">
+
+            <p class="eyebrow brown">
+                CONTACT US
+            </p>
+
+            <h2>
+                Come Say
+                <em>Hello.</em>
+            </h2>
+
+            <p>
+                Kunjungi cafe kami atau hubungi
+                melalui informasi berikut.
+            </p>
+
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+
+                <div>
+
+                    <strong>Address</strong>
+
+                    <p>
+                        Jl. Coffee No. 25,
+                        Jakarta, Indonesia
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+
+                <div>
+
+                    <strong>WhatsApp</strong>
+
+                    <p>
+                        +62 8XX XXXX XXXX
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+
+                <div>
+
+                    <strong>Email</strong>
+
+                    <p>
+                        hello@brewandbeans.com
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <div>
+
+                    <strong>Opening Hours</strong>
+
+                    <p>
+                        Mon - Fri: 08.00 - 22.00<br>
+                        Sat - Sun: 08.00 - 23.00
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <div class="contact-form-box">
+
+            <form id="contactForm">
+
+                <div class="form-group">
+
+                    <label>
+                        Nama
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Nama kamu"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="email@example.com"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Nomor WhatsApp
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="08xxxxxxxxxx"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Pesan
+                    </label>
+
+                    <textarea
+                        id="message"
+                        rows="6"
+                        placeholder="Tulis pesan kamu..."
+                        required></textarea>
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn btn-dark full-btn">
+
+                    Send Message
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MAP -->
+
+<section class="map-section">
+
+    <div class="map-placeholder">
+
+        <i class="fa-solid fa-location-dot"></i>
+
+        <h3>
+            Google Maps
+        </h3>
+
+        <p>
+            Tempatkan embed Google Maps
+            cafe kamu di bagian ini.
+        </p>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <a href="index.html"
+               class="logo footer-logo">
+
+                <span class="logo-icon">B</span>
+
+                <span>
+                    BREW
+                    <small>&</small>
+                    BEANS
+                </span>
+
+            </a>
+
+            <p>
+                Good Coffee. Good Mood.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>Quick Links</h4>
+
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+
+        </div>
+
+
+        <div>
+
+            <h4>Opening Hours</h4>
+
+            <p>
+                Monday - Friday<br>
+                08.00 - 22.00
+            </p>
+
+            <p>
+                Saturday - Sunday<br>
+                08.00 - 23.00
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <div class="container">
+
+            <p>
+                © 2026 Brew & Beans.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- CART -->
+
+<div class="cart-overlay"
+     id="cartOverlay"></div>
+
+<aside class="cart-sidebar"
+       id="cartSidebar">
+
+    <div class="cart-header">
+
+        <h2>Your Cart</h2>
+
+        <button id="closeCart">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="cart-items"
+         id="cartItems"></div>
+
+    <div class="cart-footer">
+
+        <div class="cart-total">
+
+            <span>Total</span>
+
+            <strong id="cartTotal">
+                Rp 0
+            </strong>
+
+        </div>
+
+        <button class="checkout-btn"
+                id="checkoutBtn">
+
+            Order via WhatsApp
+
+            <i class="fa-brands fa-whatsapp"></i>
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+<script src="script.js"></script>
+
+<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+</body>
+</html>

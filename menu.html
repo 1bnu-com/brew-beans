@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Menu — Brew & Beans</title>
+
+    <meta name="description"
+          content="Menu kopi dan makanan Brew & Beans.">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<header class="header" id="header">
+
+    <div class="container nav">
+
+        <a href="index.html" class="logo">
+
+            <span class="logo-icon">B</span>
+
+            <span>
+                BREW
+                <small>&</small>
+                BEANS
+            </span>
+
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-menu" id="navMenu" role="navigation">
+
+            <a href="index.html">Home</a>
+            <a href="menu.html" class="active">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+
+        </nav>
+
+        <div class="nav-actions">
+
+            <button class="nav-icon cart-button" id="cartButton">
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                <span id="cartCount">0</span>
+
+            </button>
+
+            <a href="menu.html" class="btn btn-dark nav-order">
+                Order Now
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="page-hero">
+
+    <div class="container">
+
+        <p class="eyebrow brown">
+            OUR MENU
+        </p>
+
+        <h1>
+            Coffee,
+            <em>Food & More.</em>
+        </h1>
+
+        <p>
+            Pilihan terbaik yang kami siapkan
+            untuk menemani hari kamu.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="menu-page section">
+
+    <div class="container">
+
+        <!-- FILTER -->
+
+        <div class="menu-filter">
+
+            <button class="filter-btn active"
+                    data-filter="all">
+                All
+            </button>
+
+            <button class="filter-btn"
+                    data-filter="coffee">
+                Coffee
+            </button>
+
+            <button class="filter-btn"
+                    data-filter="noncoffee">
+                Non Coffee
+            </button>
+
+            <button class="filter-btn"
+                    data-filter="food">
+                Food
+            </button>
+
+            <button class="filter-btn"
+                    data-filter="dessert">
+                Dessert
+            </button>
+
+        </div>
+
+
+        <div class="product-grid menu-products">
+
+
+            <!-- ESPRESSO -->
+
+            <article class="product-card"
+                     data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=85"
+                        alt="Espresso">
+
+                    <span class="product-tag">
+                        COFFEE
+                    </span>
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Espresso</h3>
+
+                    <p>
+                        Kopi dengan karakter kuat,
+                        bold dan aromatik.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 25.000</strong>
+
+                        <button class="add-cart"
+                                data-id="1"
+                                data-name="Espresso"
+                                data-price="25000"
+                                data-image="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CAPPUCCINO -->
+
+            <article class="product-card"
+                     data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=85"
+                        alt="Cappuccino">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Cappuccino</h3>
+
+                    <p>
+                        Espresso, susu dan foam
+                        yang creamy.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 30.000</strong>
+
+                        <button class="add-cart"
+                                data-id="2"
+                                data-name="Cappuccino"
+                                data-price="30000"
+                                data-image="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- LATTE -->
+
+            <article class="product-card"
+                     data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=85"
+                        alt="Cafe Latte">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Cafe Latte</h3>
+
+                    <p>
+                        Kopi susu creamy dengan
+                        rasa yang lembut.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 32.000</strong>
+
+                        <button class="add-cart"
+                                data-id="3"
+                                data-name="Cafe Latte"
+                                data-price="32000"
+                                data-image="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- AMERICANO -->
+
+            <article class="product-card"
+                     data-category="coffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=85"
+                        alt="Americano">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Americano</h3>
+
+                    <p>
+                        Espresso dan air dengan
+                        rasa clean dan bold.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 27.000</strong>
+
+                        <button class="add-cart"
+                                data-id="4"
+                                data-name="Americano"
+                                data-price="27000"
+                                data-image="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- MATCHA -->
+
+            <article class="product-card"
+                     data-category="noncoffee">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=85"
+                        alt="Matcha Latte">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Matcha Latte</h3>
+
+                    <p>
+                        Matcha premium dengan
+                        susu creamy.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 30.000</strong>
+
+                        <button class="add-cart"
+                                data-id="5"
+                                data-name="Matcha Latte"
+                                data-price="30000"
+                                data-image="https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CAKE -->
+
+            <article class="product-card"
+                     data-category="dessert">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=85"
+                        alt="Chocolate Cake">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Chocolate Cake</h3>
+
+                    <p>
+                        Cake cokelat lembut
+                        dengan rasa rich.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 28.000</strong>
+
+                        <button class="add-cart"
+                                data-id="6"
+                                data-name="Chocolate Cake"
+                                data-price="28000"
+                                data-image="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- CROISSANT -->
+
+            <article class="product-card"
+                     data-category="food">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=85"
+                        alt="Croissant">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>Croissant</h3>
+
+                    <p>
+                        Croissant buttery
+                        dengan tekstur renyah.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 25.000</strong>
+
+                        <button class="add-cart"
+                                data-id="7"
+                                data-name="Croissant"
+                                data-price="25000"
+                                data-image="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- FRIES -->
+
+            <article class="product-card"
+                     data-category="food">
+
+                <div class="product-image">
+
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=85"
+                        alt="French Fries">
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>French Fries</h3>
+
+                    <p>
+                        Kentang goreng renyah
+                        dengan bumbu spesial.
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <strong>Rp 22.000</strong>
+
+                        <button class="add-cart"
+                                data-id="8"
+                                data-name="French Fries"
+                                data-price="22000"
+                                data-image="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=85">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- CART -->
+
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<aside class="cart-sidebar" id="cartSidebar">
+
+    <div class="cart-header">
+
+        <h2>Your Cart</h2>
+
+        <button id="closeCart">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-footer">
+
+        <div class="cart-total">
+
+            <span>Total</span>
+
+            <strong id="cartTotal">
+                Rp 0
+            </strong>
+
+        </div>
+
+        <button class="checkout-btn"
+                id="checkoutBtn">
+
+            Order via WhatsApp
+
+            <i class="fa-brands fa-whatsapp"></i>
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <div class="container">
+
+            <p>
+                © 2026 Brew & Beans.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+</body>
+</html>

@@ -12,6 +12,14 @@
     <meta name="keywords"
           content="cafe, coffee shop, kopi, cafe Indonesia, Brew and Beans">
 
+    <link rel="canonical" href="https://handikaweb.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://handikaweb.com/">
+    <meta property="og:title" content="Brew & Beans - Premium Coffee & Cafe">
+    <meta property="og:description" content="Nikmati kopi premium, makanan lezat, dan suasana cafe yang nyaman di Brew & Beans.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,11 +68,11 @@
 
         <div class="nav-actions">
 
-            <button class="nav-icon" id="searchButton">
+            <button class="nav-icon" id="searchButton" aria-label="Search menu">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
 
-            <button class="nav-icon cart-button" id="cartButton">
+            <button class="nav-icon cart-button" id="cartButton" aria-label="Open shopping cart">
 
                 <i class="fa-solid fa-bag-shopping"></i>
 
@@ -498,7 +506,7 @@
                 </div>
 
                 <div>
-                    <strong>10K+</strong>
+                    <strong>10K+ <small>(demo)</small></strong>
                     <span>Happy Customers</span>
                 </div>
 
@@ -554,7 +562,7 @@
         <div class="section-heading center">
 
             <p class="eyebrow brown">
-                CUSTOMER STORIES
+                CUSTOMER STORIES (DEMO CONTENT)
             </p>
 
             <h2>
@@ -686,7 +694,7 @@
 
         <h2>Your Cart</h2>
 
-        <button id="closeCart">
+        <button id="closeCart" aria-label="Close shopping cart">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
@@ -722,7 +730,7 @@
 
         </div>
 
-        <button class="checkout-btn" id="checkoutBtn">
+        <button class="checkout-btn" id="checkoutBtn" aria-label="Order cart via WhatsApp">
             Order via WhatsApp
             <i class="fa-brands fa-whatsapp"></i>
         </button>
@@ -795,15 +803,15 @@
 
             <div class="socials">
 
-                <a href="#">
+                <a href="https://www.instagram.com/brewandbeans/" aria-label="Brew & Beans on Instagram" target="_blank" rel="noopener">
                     <i class="fa-brands fa-instagram"></i>
                 </a>
 
-                <a href="#">
+                <a href="https://www.facebook.com/brewandbeans/" aria-label="Brew & Beans on Facebook" target="_blank" rel="noopener">
                     <i class="fa-brands fa-facebook"></i>
                 </a>
 
-                <a href="#">
+                <a href="https://www.tiktok.com/@brewandbeans" aria-label="Brew & Beans on TikTok" target="_blank" rel="noopener">
                     <i class="fa-brands fa-tiktok"></i>
                 </a>
 
@@ -831,11 +839,11 @@
 
 
 <!-- JAVASCRIPT -->
-<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+<a href="https://wa.me/6285715330064" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
 </a>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 
 </body>
 </html>

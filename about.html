@@ -13,6 +13,14 @@
     <meta name="description"
           content="Cerita tentang Brew & Beans Coffee Shop.">
 
+    <link rel="canonical" href="https://handikaweb.com/about.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://handikaweb.com/about.html">
+    <meta property="og:title" content="About - Brew & Beans">
+    <meta property="og:description" content="Cerita tentang Brew & Beans Coffee Shop.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=85">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
@@ -65,7 +73,8 @@
         <div class="nav-actions">
 
             <button class="nav-icon cart-button"
-                    id="cartButton">
+                    id="cartButton"
+                    aria-label="Open shopping cart">
 
                 <i class="fa-solid fa-bag-shopping"></i>
 
@@ -185,7 +194,7 @@
 
         <div>
 
-            <strong>10K+</strong>
+            <strong>10K+ <small>(demo)</small></strong>
 
             <span>
                 Happy Customers
@@ -297,7 +306,7 @@
 
         <h2>Your Cart</h2>
 
-        <button id="closeCart">
+        <button id="closeCart" aria-label="Close shopping cart">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
@@ -318,7 +327,8 @@
         </div>
 
         <button class="checkout-btn"
-                id="checkoutBtn">
+            id="checkoutBtn"
+            aria-label="Order cart via WhatsApp">
 
             Order via WhatsApp
             <i class="fa-brands fa-whatsapp"></i>
@@ -330,9 +340,9 @@
 </aside>
 
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 
-<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+<a href="https://wa.me/6285715330064" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
 </a>
 

@@ -9,17 +9,20 @@
 
    GANTI NOMOR DI BAWAH INI
 
-   Contoh:
-   6281234567890
-
-   Jangan gunakan:
-   +62
-   0812
+    Format: country code, without + or a leading 0.
 ========================================= */
 
-// WhatsApp number used for checkout. Change this to your number (no leading + or 0):
-// Example: 6281234567890
-const WHATSAPP_NUMBER = "6281234567890";
+// Add the real business number before publishing (country code, no + or leading 0).
+const WHATSAPP_NUMBER = "6285715330064";
+
+function buildWhatsAppURL(message) {
+    if (!WHATSAPP_NUMBER) {
+        showNotification("Nomor WhatsApp belum dikonfigurasi. Silakan hubungi kami lewat email.");
+        return null;
+    }
+
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
 
 
 /* =========================================
@@ -612,13 +615,13 @@ checkoutButton?.addEventListener(
 
 
         let message =
-            "Halo Brew & Beans, saya ingin memesan:%0A%0A";
+            "Halo Brew & Beans, saya ingin memesan:\n\n";
 
 
         cart.forEach(item => {
 
             message +=
-                `${item.name} x${item.quantity}%0A`;
+                `${item.name} x${item.quantity}\n`;
 
         });
 
@@ -636,11 +639,11 @@ checkoutButton?.addEventListener(
 
 
         message +=
-            `%0ATotal: ${formatRupiah(total)}`;
+            `\nTotal: ${formatRupiah(total)}`;
 
 
         message +=
-            "%0A%0ATerima kasih.";
+            "\n\nTerima kasih.";
 
 
         /*
@@ -649,8 +652,9 @@ checkoutButton?.addEventListener(
         */
 
 
-        const whatsappURL =
-            `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+        const whatsappURL = buildWhatsAppURL(message);
+
+        if (!whatsappURL) return;
 
 
         window.open(
@@ -668,19 +672,20 @@ if (whatsappFab) {
     whatsappFab.addEventListener('click', (e) => {
         e.preventDefault();
 
-        let message = 'Halo Brew & Beans, saya ingin memesan:%0A%0A';
+        let message = 'Halo Brew & Beans, saya ingin memesan:\n\n';
 
         if (cart.length > 0) {
             cart.forEach(item => {
-                message += `${item.name} x${item.quantity}%0A`;
+                message += `${item.name} x${item.quantity}\n`;
             });
             const total = cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
-            message += `%0ATotal: ${formatRupiah(total)}%0A%0ATerima kasih.`;
+            message += `\nTotal: ${formatRupiah(total)}\n\nTerima kasih.`;
         } else {
             message = 'Halo Brew & Beans, saya ingin memesan. Terima kasih.';
         }
 
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+        const url = buildWhatsAppURL(message);
+        if (!url) return;
         window.open(url, '_blank');
 
     });
@@ -778,12 +783,13 @@ contactForm?.addEventListener(
         }
 
 
-        showNotification(
-            "Pesan berhasil dikirim!"
+        const subject = encodeURIComponent(`Pesan dari ${name}`);
+        const body = encodeURIComponent(
+            `Nama: ${name}\nEmail: ${email}\nWhatsApp: ${phone}\n\n${message}`
         );
 
-
-        contactForm.reset();
+        window.location.href =
+            `mailto:hello@handikaweb.com?subject=${subject}&body=${body}`;
 
     }
 );

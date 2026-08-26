@@ -13,6 +13,14 @@
     <meta name="description"
           content="Menu kopi dan makanan Brew & Beans.">
 
+    <link rel="canonical" href="https://handikaweb.com/menu.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://handikaweb.com/menu.html">
+    <meta property="og:title" content="Menu - Brew & Beans">
+    <meta property="og:description" content="Menu kopi dan makanan Brew & Beans.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
@@ -64,7 +72,7 @@
 
         <div class="nav-actions">
 
-            <button class="nav-icon cart-button" id="cartButton">
+            <button class="nav-icon cart-button" id="cartButton" aria-label="Open shopping cart">
 
                 <i class="fa-solid fa-bag-shopping"></i>
 
@@ -505,7 +513,7 @@
 
         <h2>Your Cart</h2>
 
-        <button id="closeCart">
+        <button id="closeCart" aria-label="Close shopping cart">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
@@ -526,7 +534,8 @@
         </div>
 
         <button class="checkout-btn"
-                id="checkoutBtn">
+            id="checkoutBtn"
+            aria-label="Order cart via WhatsApp">
 
             Order via WhatsApp
 
@@ -557,9 +566,9 @@
 </footer>
 
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 
-<a href="#" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
+<a href="https://wa.me/6285715330064" id="whatsappFab" class="whatsapp-fab" aria-label="Order via WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
 </a>
 

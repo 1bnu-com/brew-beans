@@ -171,7 +171,7 @@ function refreshCart() {
 }
 
 function addToCart(product) {
-    lastOrder = null;
+    if (lastOrder) setLastOrder(null);
 
     const existing = cart.find(item => item.id === product.id);
 
@@ -309,9 +309,12 @@ cartItemsEl?.addEventListener("click", (e) => {
     }
 
     if (e.target.closest("[data-new-order]")) {
-        lastOrder = null;
+        setLastOrder(null);
         renderCart();
     }
+
+    const refreshButton = e.target.closest("[data-refresh-order]");
+    if (refreshButton) refreshOrderStatus(refreshButton);
 });
 
 
@@ -374,7 +377,7 @@ function setCheckoutLabel(html) {
 }
 
 const CHECKOUT_LABEL_START = 'Checkout <i class="fa-solid fa-arrow-right"></i>';
-const CHECKOUT_LABEL_SEND = 'Pesan Sekarang <i class="fa-brands fa-whatsapp"></i>';
+const CHECKOUT_LABEL_SEND = 'Pesan Sekarang <i class="fa-solid fa-paper-plane"></i>';
 
 function buildWhatsAppOrderMessage(order) {
     let message = "Halo Brew & Beans, saya ingin memesan:\n\n";
@@ -462,7 +465,15 @@ async function handleCheckout(event) {
             return;
         }
 
-        // Server tidak bisa dihubungi -> kirim langsung via WhatsApp (mode lama)
+        if (API_ENABLED) {
+            // Koneksi internet / server bermasalah -> pesanan TIDAK dikirim, keranjang tetap
+            showNotification("Gagal mengirim pesanan. Periksa koneksi lalu coba lagi.", "error");
+            checkoutButton.disabled = false;
+            setCheckoutLabel(CHECKOUT_LABEL_SEND);
+            return;
+        }
+
+        // Dibuka sebagai file tanpa server -> tidak ada sistem, kirim via WhatsApp
         order = {
             ...data,
             code: null,
@@ -471,10 +482,12 @@ async function handleCheckout(event) {
         };
     }
 
-    order.whatsappUrl = buildWhatsAppURL(buildWhatsAppOrderMessage(order));
+    if (!order.code) {
+        order.whatsappUrl = buildWhatsAppURL(buildWhatsAppOrderMessage(order));
+    }
 
     cart = [];
-    lastOrder = order;
+    setLastOrder(order);
     refreshCart();
 
     checkoutButton.disabled = false;
@@ -483,27 +496,100 @@ async function handleCheckout(event) {
     setCheckoutLabel(CHECKOUT_LABEL_START);
 
     if (order.whatsappUrl) window.open(order.whatsappUrl, "_blank", "noopener");
+    else showNotification("Pesanan masuk! Kode: " + order.code);
 }
 
+const ORDER_STATUS_LABELS = {
+    pending: "Menunggu diproses",
+    processing: "Sedang dibuat",
+    ready: "Siap diambil / disajikan",
+    completed: "Selesai",
+    cancelled: "Dibatalkan"
+};
+
 function orderSuccessHTML(order) {
+    // Mode tanpa server: pesanan dikirim lewat WhatsApp
+    if (!order.code) {
+        return `
+            <div class="order-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <h3>Pesanan Siap Dikirim</h3>
+                <p class="order-total">Total ${formatRupiah(order.total)}</p>
+                ${order.whatsappUrl ? `
+                    <a class="btn btn-dark order-wa" href="${escapeHTML(order.whatsappUrl)}" target="_blank" rel="noopener">
+                        Kirim via WhatsApp <i class="fa-brands fa-whatsapp"></i>
+                    </a>` : ""}
+                <button type="button" class="text-link" data-new-order>Buat pesanan baru</button>
+            </div>
+        `;
+    }
+
+    const status = order.status || "pending";
+    const helpUrl = buildWhatsAppURL(`Halo Brew & Beans, saya ingin bertanya tentang pesanan ${order.code}.`);
+
     return `
         <div class="order-success">
             <i class="fa-solid fa-circle-check"></i>
-            <h3>${order.code ? "Pesanan Diterima!" : "Pesanan Siap Dikirim"}</h3>
-            ${order.code ? `
-                <p>Kode pesanan kamu:</p>
-                <strong class="order-code">${escapeHTML(order.code)}</strong>
-            ` : ""}
+            <h3>Pesanan Masuk!</h3>
+            <p>Pesanan kamu sudah kami terima. Simpan kode ini:</p>
+            <strong class="order-code">${escapeHTML(order.code)}</strong>
             <p class="order-total">Total ${formatRupiah(order.total)}</p>
-            <p class="order-hint">Konfirmasi pesanan lewat WhatsApp agar segera kami proses.</p>
-            ${order.whatsappUrl ? `
-                <a class="btn btn-dark order-wa" href="${escapeHTML(order.whatsappUrl)}" target="_blank" rel="noopener">
-                    Konfirmasi via WhatsApp <i class="fa-brands fa-whatsapp"></i>
-                </a>` : ""}
+
+            <div class="order-status status-${escapeHTML(status)}">
+                <span>Status:</span>
+                <b data-order-status-text>${ORDER_STATUS_LABELS[status] || escapeHTML(status)}</b>
+            </div>
+
+            <button type="button" class="btn btn-dark order-refresh" data-refresh-order>
+                Cek status <i class="fa-solid fa-rotate"></i>
+            </button>
+
             <button type="button" class="text-link" data-new-order>Buat pesanan baru</button>
+
+            ${helpUrl ? `
+                <a class="order-help" href="${escapeHTML(helpUrl)}" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-whatsapp"></i> Ada kendala? Hubungi kami
+                </a>` : ""}
         </div>
     `;
 }
+
+function setLastOrder(order) {
+    lastOrder = order;
+    try {
+        if (order && order.code) {
+            localStorage.setItem("brewBeansLastOrder", JSON.stringify({
+                code: order.code, total: order.total, status: order.status
+            }));
+        } else {
+            localStorage.removeItem("brewBeansLastOrder");
+        }
+    } catch { /* abaikan */ }
+}
+
+async function refreshOrderStatus(button) {
+    if (!lastOrder?.code) return;
+
+    button.disabled = true;
+    try {
+        const { order } = await api(`/api/orders/${encodeURIComponent(lastOrder.code)}`);
+        const changed = order.status !== lastOrder.status;
+        setLastOrder({ ...lastOrder, status: order.status, total: order.total });
+        renderCart();
+        showNotification(changed
+            ? "Status diperbarui: " + (ORDER_STATUS_LABELS[order.status] || order.status)
+            : "Status masih: " + (ORDER_STATUS_LABELS[order.status] || order.status));
+    } catch (error) {
+        showNotification(error.message || "Gagal memuat status.", "error");
+        button.disabled = false;
+    }
+}
+
+// Tampilkan lagi pesanan terakhir setelah halaman dimuat ulang
+try {
+    const saved = JSON.parse(localStorage.getItem("brewBeansLastOrder") || "null");
+    if (saved?.code && cart.length === 0) lastOrder = saved;
+} catch { /* abaikan */ }
 
 if (checkoutButton) {
     buildCheckoutForm();
@@ -517,16 +603,22 @@ renderCart();
 
 /* =========================================
    FLOATING WHATSAPP BUTTON
+   Untuk pertanyaan / komplain (pemesanan lewat sistem checkout)
 ========================================= */
 
 const whatsappFab = document.getElementById("whatsappFab");
 
+whatsappFab?.setAttribute("aria-label", "Hubungi kami via WhatsApp");
+whatsappFab?.setAttribute("title", "Pertanyaan atau komplain? Chat kami");
+
 whatsappFab?.addEventListener("click", (e) => {
     e.preventDefault();
 
-    let message = "Halo Brew & Beans, saya ingin memesan. Terima kasih.";
+    let message = "Halo Brew & Beans, saya ingin bertanya.";
 
-    if (cart.length > 0) {
+    if (lastOrder?.code) {
+        message = `Halo Brew & Beans, saya ingin bertanya tentang pesanan ${lastOrder.code}.`;
+    } else if (!API_ENABLED && cart.length > 0) {
         message = buildWhatsAppOrderMessage({ items: cart, total: cartTotal() });
     }
 

@@ -1795,3 +1795,34 @@ p {
 .cart-overlay { z-index: 1100; }
 .cart-sidebar { z-index: 1200; }
 .notification { z-index: 1300; }
+
+/* Status pesanan di keranjang */
+.order-status {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    background: #FFF1D6;
+    color: #8A5A00;
+}
+.order-status.status-processing { background: #E3EEFF; color: #1F4F9A; }
+.order-status.status-ready      { background: #E1F5E8; color: #1E7A43; }
+.order-status.status-completed  { background: #ECE7E2; color: #5E544D; }
+.order-status.status-cancelled  { background: #FBE4DF; color: #A2392A; }
+
+.order-success .order-refresh { margin-top: 0.6rem; }
+.order-success .order-refresh:disabled { opacity: 0.6; cursor: wait; }
+
+.order-help {
+    margin-top: 1.2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+.order-help i { color: #25D366; }
+.order-help:hover { color: var(--espresso); text-decoration: underline; }

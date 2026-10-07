@@ -1,0 +1,15 @@
+{
+  "name": "brew-beans-cafe",
+  "version": "1.0.0",
+  "description": "Website Brew & Beans: frontend + backend (Node.js + SQLite bawaan, tanpa dependency)",
+  "main": "server/index.js",
+  "private": true,
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "reset-db": "node --disable-warning=ExperimentalWarning server/reset-db.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

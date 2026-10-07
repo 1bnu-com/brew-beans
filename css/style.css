@@ -1626,3 +1626,172 @@ p {
     }
 }
 
+
+
+/* =========================================
+   CHECKOUT FORM & ORDER (terhubung backend)
+========================================= */
+
+.checkout-form .checkout-fields {
+    display: none;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.checkout-form.open .checkout-fields {
+    display: grid;
+}
+
+.cart-footer.is-empty .checkout-form {
+    display: none;
+}
+
+.checkout-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+}
+
+.checkout-fields label > span {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--coffee-brown);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.checkout-fields input[type="text"],
+.checkout-fields input[type="tel"] {
+    width: 100%;
+    border: 1px solid rgba(36,23,18,0.14);
+    border-radius: 12px;
+    background: #fff;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.88rem;
+    color: var(--text);
+}
+
+.checkout-fields input:focus {
+    outline: none;
+    border-color: rgba(184,137,91,0.7);
+    box-shadow: 0 0 0 3px rgba(184,137,91,0.12);
+}
+
+.order-type {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.order-type label {
+    position: relative;
+    cursor: pointer;
+}
+
+.order-type input {
+    position: absolute;
+    opacity: 0;
+}
+
+.order-type span {
+    display: block;
+    text-align: center;
+    padding: 0.55rem;
+    border-radius: 12px;
+    border: 1px solid rgba(36,23,18,0.14);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    transition: 0.2s ease;
+}
+
+.order-type input:checked + span {
+    background: var(--espresso);
+    border-color: var(--espresso);
+    color: var(--warm-white);
+}
+
+.order-type input:focus-visible + span {
+    box-shadow: 0 0 0 3px rgba(184,137,91,0.35);
+}
+
+.checkout-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.order-success {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    padding: 2rem 0.5rem 1rem;
+}
+
+.order-success > i {
+    font-size: 3rem;
+    color: #2e9e5b;
+    margin-bottom: 0.4rem;
+}
+
+.order-success h3 {
+    font-size: 1.6rem;
+}
+
+.order-success p {
+    color: var(--muted);
+}
+
+.order-code {
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    color: var(--espresso);
+    background: rgba(184,137,91,0.14);
+    padding: 0.4rem 1rem;
+    border-radius: 12px;
+}
+
+.order-success .order-total {
+    font-weight: 600;
+    color: var(--espresso);
+}
+
+.order-success .order-hint {
+    font-size: 0.85rem;
+    max-width: 280px;
+}
+
+.order-success .order-wa {
+    margin-top: 0.6rem;
+}
+
+.order-success .text-link {
+    background: none;
+    border: 0;
+    margin-top: 0.4rem;
+    font-size: 0.88rem;
+}
+
+.notification-error {
+    background: rgba(140, 38, 26, 0.94);
+}
+
+.menu-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--muted);
+    padding: 3rem 0;
+}
+
+@media (max-width: 420px) {
+    .checkout-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Perbaikan: keranjang harus berada di atas navbar (navbar z-index 1000) */
+.cart-overlay { z-index: 1100; }
+.cart-sidebar { z-index: 1200; }
+.notification { z-index: 1300; }

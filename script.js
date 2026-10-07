@@ -1,6 +1,6 @@
 /* =========================================
    BREW & BEANS
-   MAIN JAVASCRIPT
+   MAIN JAVASCRIPT (terhubung ke backend /api)
 ========================================= */
 
 
@@ -8,20 +8,57 @@
    WHATSAPP NUMBER
 
    GANTI NOMOR DI BAWAH INI
-
-    Format: country code, without + or a leading 0.
+   Format: kode negara, tanpa + atau 0 di depan.
 ========================================= */
 
-// Add the real business number before publishing (country code, no + or leading 0).
 const WHATSAPP_NUMBER = "6285715330064";
 
 function buildWhatsAppURL(message) {
     if (!WHATSAPP_NUMBER) {
-        showNotification("Nomor WhatsApp belum dikonfigurasi. Silakan hubungi kami lewat email.");
+        showNotification("Nomor WhatsApp belum dikonfigurasi. Silakan hubungi kami lewat email.", "error");
         return null;
     }
 
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+
+/* =========================================
+   KONEKSI KE BACKEND
+   Jika website dibuka langsung sebagai file (tanpa server),
+   semua fitur tetap jalan dengan mode lama (tanpa database).
+========================================= */
+
+const API_ENABLED = location.protocol === "http:" || location.protocol === "https:";
+
+async function api(path, options = {}) {
+    if (!API_ENABLED) throw new Error("offline");
+
+    const response = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...options,
+        body: options.body ? JSON.stringify(options.body) : undefined
+    });
+
+    let data = {};
+    try { data = await response.json(); } catch { /* bukan JSON */ }
+
+    if (!response.ok) {
+        const error = new Error(data.error || "Terjadi kesalahan. Coba lagi.");
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+}
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 
@@ -32,61 +69,39 @@ function buildWhatsAppURL(message) {
 const hamburger = document.getElementById("hamburger");
 const navMenu = document.getElementById("navMenu");
 
-if (hamburger && navMenu) {
-    // ensure initial accessibility state
-    hamburger.setAttribute('aria-expanded','false');
+function setNavOpen(isOpen) {
+    if (!hamburger || !navMenu) return;
 
-    hamburger.addEventListener("click", () => {
+    navMenu.classList.toggle("open", isOpen);
+    hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    navMenu.setAttribute("aria-hidden", isOpen ? "false" : "true");
 
-        navMenu.classList.toggle("open");
-        const isOpen = navMenu.classList.contains('open');
-        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        navMenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-
-        const icon = hamburger.querySelector("i");
-
-        if (navMenu.classList.contains("open")) {
-
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
-
-        } else {
-
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
-
-        }
-
-    });
-
+    const icon = hamburger.querySelector("i");
+    icon?.classList.toggle("fa-bars", !isOpen);
+    icon?.classList.toggle("fa-xmark", isOpen);
 }
 
-// Close mobile nav when clicking a link
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (navMenu.classList.contains('open')) {
-            navMenu.classList.remove('open');
-            const icon = hamburger.querySelector('i');
-            icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
-            hamburger.setAttribute('aria-expanded','false');
+if (hamburger && navMenu) {
+    hamburger.setAttribute("aria-expanded", "false");
+
+    hamburger.addEventListener("click", () => {
+        setNavOpen(!navMenu.classList.contains("open"));
+    });
+
+    navMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => setNavOpen(false));
+    });
+
+    document.addEventListener("click", (e) => {
+        if (
+            navMenu.classList.contains("open") &&
+            !navMenu.contains(e.target) &&
+            !hamburger.contains(e.target)
+        ) {
+            setNavOpen(false);
         }
     });
-});
-
-// Click outside to close the mobile nav
-document.addEventListener('click', (e) => {
-    if (!navMenu || !hamburger) return;
-
-    if (navMenu.classList.contains('open')) {
-        const target = e.target;
-        if (!navMenu.contains(target) && !hamburger.contains(target)) {
-            navMenu.classList.remove('open');
-            const icon = hamburger.querySelector('i');
-            icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
-            hamburger.setAttribute('aria-expanded','false');
-        }
-    }
-});
+}
 
 
 /* =========================================
@@ -96,33 +111,12 @@ document.addEventListener('click', (e) => {
 const header = document.getElementById("header");
 
 function navbarScroll() {
-
     if (!header) return;
-
-    if (window.scrollY > 40) {
-
-        header.classList.add("scrolled");
-
-    } else {
-
-        header.classList.remove("scrolled");
-
-    }
-
+    header.classList.toggle("scrolled", window.scrollY > 40);
 }
 
 window.addEventListener("scroll", navbarScroll);
-
 navbarScroll();
-
-
-/* =========================================
-   CART
-========================================= */
-
-let cart = JSON.parse(
-    localStorage.getItem("brewBeansCart")
-) || [];
 
 
 /* =========================================
@@ -130,128 +124,80 @@ let cart = JSON.parse(
 ========================================= */
 
 function formatRupiah(number) {
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0
-        }
-    ).format(number);
-
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+    }).format(number);
 }
 
 
 /* =========================================
-   SAVE CART
+   CART (disimpan di browser)
 ========================================= */
+
+let cart = [];
+
+try {
+    cart = (JSON.parse(localStorage.getItem("brewBeansCart")) || [])
+        .map(item => ({ ...item, id: String(item.id) }));
+} catch {
+    cart = [];
+}
+
+// Pesanan terakhir yang berhasil dibuat (untuk ditampilkan di keranjang)
+let lastOrder = null;
 
 function saveCart() {
-
-    localStorage.setItem(
-        "brewBeansCart",
-        JSON.stringify(cart)
-    );
-
+    try {
+        localStorage.setItem("brewBeansCart", JSON.stringify(cart));
+    } catch { /* storage penuh / diblokir */ }
 }
 
-
-/* =========================================
-   UPDATE CART COUNT
-========================================= */
+function cartTotal() {
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
 
 function updateCartCount() {
-
-    const cartCount =
-        document.getElementById("cartCount");
-
+    const cartCount = document.getElementById("cartCount");
     if (!cartCount) return;
-
-    const totalItems = cart.reduce(
-        (total, item) =>
-            total + item.quantity,
-        0
-    );
-
-    cartCount.textContent = totalItems;
-
+    cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
 }
 
-
-/* =========================================
-   ADD PRODUCT
-========================================= */
+function refreshCart() {
+    saveCart();
+    updateCartCount();
+    renderCart();
+}
 
 function addToCart(product) {
+    lastOrder = null;
 
-    const existingProduct =
-        cart.find(
-            item => item.id === product.id
-        );
+    const existing = cart.find(item => item.id === product.id);
 
-
-    if (existingProduct) {
-
-        existingProduct.quantity++;
-
+    if (existing) {
+        existing.quantity++;
     } else {
-
-        cart.push({
-
-            ...product,
-
-            quantity: 1
-
-        });
-
+        cart.push({ ...product, quantity: 1 });
     }
 
-
-    saveCart();
-
-    updateCartCount();
-
-    renderCart();
-
-    showNotification(
-        product.name + " ditambahkan ke cart"
-    );
-
+    refreshCart();
+    showNotification(product.name + " ditambahkan ke cart");
 }
 
+// Tombol "+" di kartu menu (event delegation: berlaku juga untuk menu dari database)
+document.addEventListener("click", (e) => {
+    const button = e.target.closest(".add-cart");
+    if (!button) return;
 
-/* =========================================
-   ADD BUTTON
-========================================= */
-
-const addButtons =
-    document.querySelectorAll(".add-cart");
-
-
-addButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const product = {
-
-            id: button.dataset.id,
-
-            name: button.dataset.name,
-
-            price:
-                Number(button.dataset.price),
-
-            image: button.dataset.image
-
-        };
-
-        addToCart(product);
-
-        openCart();
-
+    addToCart({
+        id: String(button.dataset.id),
+        name: button.dataset.name,
+        price: Number(button.dataset.price),
+        image: button.dataset.image
     });
 
+    openCart();
 });
 
 
@@ -259,608 +205,530 @@ addButtons.forEach(button => {
    CART SIDEBAR
 ========================================= */
 
-const cartButton =
-    document.getElementById("cartButton");
-
-const cartSidebar =
-    document.getElementById("cartSidebar");
-
-const cartOverlay =
-    document.getElementById("cartOverlay");
-
-const closeCart =
-    document.getElementById("closeCart");
-
+const cartButton = document.getElementById("cartButton");
+const cartSidebar = document.getElementById("cartSidebar");
+const cartOverlay = document.getElementById("cartOverlay");
+const closeCart = document.getElementById("closeCart");
 
 function openCart() {
-
     if (!cartSidebar) return;
-
     cartSidebar.classList.add("active");
-
     cartOverlay?.classList.add("active");
-
     document.body.style.overflow = "hidden";
-
 }
-
 
 function closeCartSidebar() {
-
     if (!cartSidebar) return;
-
     cartSidebar.classList.remove("active");
-
     cartOverlay?.classList.remove("active");
-
     document.body.style.overflow = "";
-
 }
 
+cartButton?.addEventListener("click", openCart);
+closeCart?.addEventListener("click", closeCartSidebar);
+cartOverlay?.addEventListener("click", closeCartSidebar);
 
-cartButton?.addEventListener(
-    "click",
-    openCart
-);
+document.querySelectorAll("[data-open-cart]").forEach(button => {
+    button.addEventListener("click", openCart);
+});
 
-
-closeCart?.addEventListener(
-    "click",
-    closeCartSidebar
-);
-
-
-cartOverlay?.addEventListener(
-    "click",
-    closeCartSidebar
-);
-
-
-document
-    .querySelectorAll("[data-open-cart]")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            openCart
-        );
-
-    });
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeCartSidebar();
+});
 
 
 /* =========================================
    RENDER CART
 ========================================= */
 
+const cartItemsEl = document.getElementById("cartItems");
+const cartTotalEl = document.getElementById("cartTotal");
+
 function renderCart() {
+    if (!cartItemsEl) return;
 
-    const cartItems =
-        document.getElementById("cartItems");
-
-    const cartTotal =
-        document.getElementById("cartTotal");
-
-
-    if (!cartItems) return;
-
+    const footer = cartSidebar?.querySelector(".cart-footer");
 
     if (cart.length === 0) {
+        footer?.classList.add("is-empty");
+        if (cartTotalEl) cartTotalEl.textContent = formatRupiah(0);
 
-        cartItems.innerHTML = `
-
+        cartItemsEl.innerHTML = lastOrder ? orderSuccessHTML(lastOrder) : `
             <div class="empty-cart">
-
                 <i class="fa-solid fa-bag-shopping"></i>
-
-                <p>
-                    Keranjang masih kosong.
-                </p>
-
-                <a href="menu.html"
-                   class="btn btn-dark">
-                    Explore Menu
-                </a>
-
+                <p>Keranjang masih kosong.</p>
+                <a href="menu.html" class="btn btn-dark">Explore Menu</a>
             </div>
-
         `;
-
-        if (cartTotal) {
-
-            cartTotal.textContent =
-                formatRupiah(0);
-
-        }
-
         return;
-
     }
 
+    footer?.classList.remove("is-empty");
 
-    cartItems.innerHTML = "";
-
-
-    cart.forEach(item => {
-
-        const cartItem =
-            document.createElement("div");
-
-        cartItem.className =
-            "cart-item";
-
-
-        cartItem.innerHTML = `
-
-            <img
-                src="${item.image}"
-                alt="${item.name}">
-
+    cartItemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}">
             <div>
-
-                <h4>
-                    ${item.name}
-                </h4>
-
-                <div class="cart-item-price">
-                    ${formatRupiah(item.price)}
-                </div>
-
+                <h4>${escapeHTML(item.name)}</h4>
+                <div class="cart-item-price">${formatRupiah(item.price)}</div>
                 <div class="quantity">
-
-                    <button
-                        class="decrease"
-                        data-id="${item.id}">
-                        -
-                    </button>
-
-                    <span>
-                        ${item.quantity}
-                    </span>
-
-                    <button
-                        class="increase"
-                        data-id="${item.id}">
-                        +
-                    </button>
-
+                    <button class="decrease" data-id="${escapeHTML(item.id)}" aria-label="Kurangi">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="increase" data-id="${escapeHTML(item.id)}" aria-label="Tambah">+</button>
                 </div>
-
             </div>
-
-            <button
-                class="remove-item"
-                data-id="${item.id}">
-
+            <button class="remove-item" data-id="${escapeHTML(item.id)}" aria-label="Hapus item">
                 <i class="fa-solid fa-trash"></i>
-
             </button>
+        </div>
+    `).join("");
 
-        `;
-
-
-        cartItems.appendChild(cartItem);
-
-    });
-
-
-    const total = cart.reduce(
-
-        (sum, item) =>
-            sum + item.price * item.quantity,
-
-        0
-
-    );
-
-
-    if (cartTotal) {
-
-        cartTotal.textContent =
-            formatRupiah(total);
-
-    }
-
-
-    /* ===============================
-       INCREASE
-    =============================== */
-
-    document
-        .querySelectorAll(".increase")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const item =
-                        cart.find(
-                            product =>
-                                product.id ===
-                                button.dataset.id
-                        );
-
-                    if (item) {
-
-                        item.quantity++;
-
-                        saveCart();
-
-                        renderCart();
-
-                        updateCartCount();
-
-                    }
-
-                }
-            );
-
-        });
-
-
-    /* ===============================
-       DECREASE
-    =============================== */
-
-    document
-        .querySelectorAll(".decrease")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const item =
-                        cart.find(
-                            product =>
-                                product.id ===
-                                button.dataset.id
-                        );
-
-
-                    if (!item) return;
-
-
-                    if (item.quantity > 1) {
-
-                        item.quantity--;
-
-                    } else {
-
-                        cart =
-                            cart.filter(
-                                product =>
-                                    product.id !==
-                                    button.dataset.id
-                            );
-
-                    }
-
-
-                    saveCart();
-
-                    renderCart();
-
-                    updateCartCount();
-
-                }
-            );
-
-        });
-
-
-    /* ===============================
-       REMOVE
-    =============================== */
-
-    document
-        .querySelectorAll(".remove-item")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    cart =
-                        cart.filter(
-                            item =>
-                                item.id !==
-                                button.dataset.id
-                        );
-
-                    saveCart();
-
-                    renderCart();
-
-                    updateCartCount();
-
-                }
-            );
-
-        });
-
+    if (cartTotalEl) cartTotalEl.textContent = formatRupiah(cartTotal());
 }
 
+// Tombol +, -, hapus di dalam keranjang
+cartItemsEl?.addEventListener("click", (e) => {
+    const button = e.target.closest("button[data-id]");
 
-/* =========================================
-   INITIAL CART
-========================================= */
+    if (button) {
+        const id = button.dataset.id;
+        const item = cart.find(product => product.id === id);
+        if (!item) return;
 
-updateCartCount();
-
-renderCart();
-
-
-/* =========================================
-   CHECKOUT WHATSAPP
-========================================= */
-
-const checkoutButton =
-    document.getElementById("checkoutBtn");
-
-
-checkoutButton?.addEventListener(
-    "click",
-    () => {
-
-        if (cart.length === 0) {
-
-            showNotification(
-                "Cart masih kosong."
-            );
-
-            return;
-
+        if (button.classList.contains("increase")) {
+            item.quantity++;
+        } else if (button.classList.contains("decrease")) {
+            if (item.quantity > 1) item.quantity--;
+            else cart = cart.filter(product => product.id !== id);
+        } else if (button.classList.contains("remove-item")) {
+            cart = cart.filter(product => product.id !== id);
         }
 
-
-        let message =
-            "Halo Brew & Beans, saya ingin memesan:\n\n";
-
-
-        cart.forEach(item => {
-
-            message +=
-                `${item.name} x${item.quantity}\n`;
-
-        });
-
-
-        const total = cart.reduce(
-
-            (sum, item) =>
-                sum +
-                item.price *
-                item.quantity,
-
-            0
-
-        );
-
-
-        message +=
-            `\nTotal: ${formatRupiah(total)}`;
-
-
-        message +=
-            "\n\nTerima kasih.";
-
-
-        /*
-          NOMOR WHATSAPP DIAMBIL DARI
-          VARIABLE WHATSAPP_NUMBER
-        */
-
-
-        const whatsappURL = buildWhatsAppURL(message);
-
-        if (!whatsappURL) return;
-
-
-        window.open(
-            whatsappURL,
-            "_blank"
-        );
-
+        refreshCart();
+        return;
     }
-);
 
-/* Floating WhatsApp FAB behavior */
-const whatsappFab = document.getElementById('whatsappFab');
-
-if (whatsappFab) {
-    whatsappFab.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        let message = 'Halo Brew & Beans, saya ingin memesan:\n\n';
-
-        if (cart.length > 0) {
-            cart.forEach(item => {
-                message += `${item.name} x${item.quantity}\n`;
-            });
-            const total = cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
-            message += `\nTotal: ${formatRupiah(total)}\n\nTerima kasih.`;
-        } else {
-            message = 'Halo Brew & Beans, saya ingin memesan. Terima kasih.';
-        }
-
-        const url = buildWhatsAppURL(message);
-        if (!url) return;
-        window.open(url, '_blank');
-
-    });
-
-}
-
-
-/* =========================================
-   MENU FILTER (works on menu page and homepage signature)
-========================================= */
-
-const filterButtons = document.querySelectorAll(".filter-btn, .filter");
-
-const menuProducts = document.querySelectorAll(
-    ".menu-products .product-card, .products-grid .product-card, .product-grid .product-card"
-);
-
-filterButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    filterButtons.forEach(btn => btn.classList.remove("active"));
-    button.classList.add("active");
-
-    const filter = button.dataset.filter;
-
-    menuProducts.forEach(product => {
-      const category = product.dataset.category || product.getAttribute('data-category') || 'coffee';
-      if (filter === "all" || category === filter) {
-        product.style.display = "block";
-        product.classList.add('reveal');
-      } else {
-        product.style.display = "none";
-        product.classList.remove('reveal');
-      }
-    });
-  });
+    if (e.target.closest("[data-new-order]")) {
+        lastOrder = null;
+        renderCart();
+    }
 });
 
 
 /* =========================================
-   CONTACT FORM
+   CHECKOUT
+   1. Klik "Checkout" -> form data pemesan muncul
+   2. Pesanan disimpan ke database (dapat kode pesanan)
+   3. Pelanggan konfirmasi via WhatsApp
 ========================================= */
 
-const contactForm =
-    document.getElementById("contactForm");
+const checkoutButton = document.getElementById("checkoutBtn");
+let checkoutForm = null;
 
+function buildCheckoutForm() {
+    const footer = checkoutButton?.closest(".cart-footer");
+    if (!footer) return;
 
-contactForm?.addEventListener(
-    "submit",
-    function(event) {
+    checkoutForm = document.createElement("form");
+    checkoutForm.className = "checkout-form";
+    checkoutForm.noValidate = true;
+    checkoutForm.innerHTML = `
+        <div class="checkout-fields">
+            <div class="checkout-row">
+                <label>
+                    <span>Nama</span>
+                    <input name="customer_name" type="text" maxlength="80" autocomplete="name" placeholder="Nama kamu" required>
+                </label>
+                <label>
+                    <span>No. WhatsApp</span>
+                    <input name="phone" type="tel" maxlength="20" autocomplete="tel" placeholder="08xxxxxxxxxx" required>
+                </label>
+            </div>
+            <div class="order-type" role="radiogroup" aria-label="Tipe pesanan">
+                <label><input type="radio" name="order_type" value="takeaway" checked><span>Take Away</span></label>
+                <label><input type="radio" name="order_type" value="dinein"><span>Dine In</span></label>
+            </div>
+            <label>
+                <span>Catatan (opsional)</span>
+                <input name="note" type="text" maxlength="200" placeholder="Contoh: less sugar, meja 5">
+            </label>
+        </div>
+    `;
 
-        event.preventDefault();
+    footer.insertBefore(checkoutForm, checkoutButton);
+    checkoutForm.appendChild(checkoutButton);
+    checkoutButton.type = "submit";
 
+    // Isi otomatis dari pesanan sebelumnya
+    try {
+        const saved = JSON.parse(localStorage.getItem("brewBeansCustomer") || "{}");
+        if (saved.customer_name) checkoutForm.customer_name.value = saved.customer_name;
+        if (saved.phone) checkoutForm.phone.value = saved.phone;
+    } catch { /* abaikan */ }
 
-        const name =
-            document.getElementById("name").value.trim();
+    checkoutForm.addEventListener("submit", handleCheckout);
+}
 
-        const email =
-            document.getElementById("email").value.trim();
+function setCheckoutLabel(html) {
+    checkoutButton.innerHTML = html;
+}
 
-        const phone =
-            document.getElementById("phone").value.trim();
+const CHECKOUT_LABEL_START = 'Checkout <i class="fa-solid fa-arrow-right"></i>';
+const CHECKOUT_LABEL_SEND = 'Pesan Sekarang <i class="fa-brands fa-whatsapp"></i>';
 
-        const message =
-            document.getElementById("message").value.trim();
+function buildWhatsAppOrderMessage(order) {
+    let message = "Halo Brew & Beans, saya ingin memesan:\n\n";
 
+    if (order.code) message += `Kode Pesanan: *${order.code}*\n`;
+    if (order.customer_name) message += `Nama: ${order.customer_name}\n`;
+    if (order.order_type) message += `Tipe: ${order.order_type === "dinein" ? "Dine In" : "Take Away"}\n`;
+    message += "\n";
 
-        if (
-            !name ||
-            !email ||
-            !phone ||
-            !message
-        ) {
+    order.items.forEach(item => {
+        message += `${item.name} x${item.quantity} = ${formatRupiah(item.price * item.quantity)}\n`;
+    });
 
-            showNotification(
-                "Mohon lengkapi semua field."
-            );
+    message += `\nTotal: ${formatRupiah(order.total)}`;
+    if (order.note) message += `\nCatatan: ${order.note}`;
+    message += "\n\nTerima kasih.";
 
-            return;
+    return message;
+}
 
-        }
+async function handleCheckout(event) {
+    event.preventDefault();
 
-
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (!emailPattern.test(email)) {
-
-            showNotification(
-                "Format email tidak valid."
-            );
-
-            return;
-
-        }
-
-
-        const subject = encodeURIComponent(`Pesan dari ${name}`);
-        const body = encodeURIComponent(
-            `Nama: ${name}\nEmail: ${email}\nWhatsApp: ${phone}\n\n${message}`
-        );
-
-        window.location.href =
-            `mailto:hello@handikaweb.com?subject=${subject}&body=${body}`;
-
+    if (cart.length === 0) {
+        showNotification("Cart masih kosong.", "error");
+        return;
     }
-);
+
+    // Langkah 1: tampilkan form
+    if (!checkoutForm.classList.contains("open")) {
+        checkoutForm.classList.add("open");
+        setCheckoutLabel(CHECKOUT_LABEL_SEND);
+        checkoutForm.customer_name.focus();
+        return;
+    }
+
+    // Langkah 2: validasi
+    const data = {
+        customer_name: checkoutForm.customer_name.value.trim(),
+        phone: checkoutForm.phone.value.trim(),
+        order_type: checkoutForm.order_type.value,
+        note: checkoutForm.note.value.trim()
+    };
+
+    if (!data.customer_name) {
+        showNotification("Mohon isi nama kamu.", "error");
+        checkoutForm.customer_name.focus();
+        return;
+    }
+    if (!/^\+?[\d\s-]{8,20}$/.test(data.phone)) {
+        showNotification("Nomor WhatsApp tidak valid.", "error");
+        checkoutForm.phone.focus();
+        return;
+    }
+
+    try {
+        localStorage.setItem("brewBeansCustomer", JSON.stringify({
+            customer_name: data.customer_name,
+            phone: data.phone
+        }));
+    } catch { /* abaikan */ }
+
+    // Langkah 3: simpan pesanan ke server
+    checkoutButton.disabled = true;
+    setCheckoutLabel('Memproses... <i class="fa-solid fa-spinner fa-spin"></i>');
+
+    let order;
+
+    try {
+        const result = await api("/api/orders", {
+            method: "POST",
+            body: {
+                ...data,
+                items: cart.map(item => ({ id: Number(item.id), quantity: item.quantity }))
+            }
+        });
+        order = result.order;
+    } catch (error) {
+        if (error.status) {
+            // Server menolak (mis. menu sudah tidak tersedia)
+            showNotification(error.message, "error");
+            checkoutButton.disabled = false;
+            setCheckoutLabel(CHECKOUT_LABEL_SEND);
+            if (error.status === 409) loadProducts();
+            return;
+        }
+
+        // Server tidak bisa dihubungi -> kirim langsung via WhatsApp (mode lama)
+        order = {
+            ...data,
+            code: null,
+            items: cart.map(item => ({ name: item.name, price: item.price, quantity: item.quantity })),
+            total: cartTotal()
+        };
+    }
+
+    order.whatsappUrl = buildWhatsAppURL(buildWhatsAppOrderMessage(order));
+
+    cart = [];
+    lastOrder = order;
+    refreshCart();
+
+    checkoutButton.disabled = false;
+    checkoutForm.classList.remove("open");
+    checkoutForm.note.value = "";
+    setCheckoutLabel(CHECKOUT_LABEL_START);
+
+    if (order.whatsappUrl) window.open(order.whatsappUrl, "_blank", "noopener");
+}
+
+function orderSuccessHTML(order) {
+    return `
+        <div class="order-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <h3>${order.code ? "Pesanan Diterima!" : "Pesanan Siap Dikirim"}</h3>
+            ${order.code ? `
+                <p>Kode pesanan kamu:</p>
+                <strong class="order-code">${escapeHTML(order.code)}</strong>
+            ` : ""}
+            <p class="order-total">Total ${formatRupiah(order.total)}</p>
+            <p class="order-hint">Konfirmasi pesanan lewat WhatsApp agar segera kami proses.</p>
+            ${order.whatsappUrl ? `
+                <a class="btn btn-dark order-wa" href="${escapeHTML(order.whatsappUrl)}" target="_blank" rel="noopener">
+                    Konfirmasi via WhatsApp <i class="fa-brands fa-whatsapp"></i>
+                </a>` : ""}
+            <button type="button" class="text-link" data-new-order>Buat pesanan baru</button>
+        </div>
+    `;
+}
+
+if (checkoutButton) {
+    buildCheckoutForm();
+    setCheckoutLabel(CHECKOUT_LABEL_START);
+    checkoutButton.setAttribute("aria-label", "Checkout pesanan");
+}
+
+updateCartCount();
+renderCart();
+
+
+/* =========================================
+   FLOATING WHATSAPP BUTTON
+========================================= */
+
+const whatsappFab = document.getElementById("whatsappFab");
+
+whatsappFab?.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let message = "Halo Brew & Beans, saya ingin memesan. Terima kasih.";
+
+    if (cart.length > 0) {
+        message = buildWhatsAppOrderMessage({ items: cart, total: cartTotal() });
+    }
+
+    const url = buildWhatsAppURL(message);
+    if (url) window.open(url, "_blank", "noopener");
+});
+
+
+/* =========================================
+   MENU DARI DATABASE
+========================================= */
+
+let currentFilter = "all";
+
+const CATEGORY_LABELS = {
+    coffee: "COFFEE",
+    noncoffee: "NON COFFEE",
+    food: "FOOD",
+    dessert: "DESSERT"
+};
+
+function productCardHTML(product, { showCategoryTag = false } = {}) {
+    const tag = product.tag || (showCategoryTag ? CATEGORY_LABELS[product.category] : "");
+
+    return `
+        <article class="product-card" data-category="${escapeHTML(product.category)}">
+            <div class="product-image">
+                <img loading="lazy" src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}">
+                ${tag ? `<span class="product-tag">${escapeHTML(tag)}</span>` : ""}
+            </div>
+            <div class="product-info">
+                <h3>${escapeHTML(product.name)}</h3>
+                <p>${escapeHTML(product.description)}</p>
+                <div class="product-bottom">
+                    <strong>${formatRupiah(product.price)}</strong>
+                    <button class="add-cart"
+                            aria-label="Tambah ${escapeHTML(product.name)} ke cart"
+                            data-id="${product.id}"
+                            data-name="${escapeHTML(product.name)}"
+                            data-price="${product.price}"
+                            data-image="${escapeHTML(product.image)}">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </article>
+    `;
+}
+
+// Samakan isi keranjang dengan harga & ketersediaan terbaru di database
+function syncCartWithProducts(products) {
+    const byId = new Map(products.map(p => [String(p.id), p]));
+    const before = cart.length;
+
+    cart = cart
+        .filter(item => byId.has(item.id))
+        .map(item => {
+            const p = byId.get(item.id);
+            return { ...item, name: p.name, price: p.price, image: p.image };
+        });
+
+    if (cart.length < before) {
+        showNotification("Beberapa item di keranjang sudah tidak tersedia dan dihapus.", "error");
+    }
+
+    refreshCart();
+}
+
+async function loadProducts() {
+    if (!API_ENABLED) return;
+
+    let products;
+    try {
+        ({ products } = await api("/api/products"));
+    } catch {
+        return; // server mati -> tetap pakai menu statis di HTML
+    }
+
+    const menuGrid = document.querySelector(".menu-products");
+    if (menuGrid) {
+        menuGrid.innerHTML = products.length
+            ? products.map(p => productCardHTML(p, { showCategoryTag: true })).join("")
+            : '<p class="menu-empty">Menu belum tersedia.</p>';
+        applyFilter(currentFilter);
+    }
+
+    const featuredGrid = document.querySelector(".menu-preview .products-grid");
+    if (featuredGrid) {
+        const featured = products.filter(p => p.featured).slice(0, 8);
+        if (featured.length) {
+            featuredGrid.innerHTML = featured.map(p => productCardHTML(p)).join("");
+        }
+    }
+
+    syncCartWithProducts(products);
+}
+
+loadProducts();
+
+
+/* =========================================
+   MENU FILTER
+========================================= */
+
+function applyFilter(filter) {
+    currentFilter = filter;
+
+    document.querySelectorAll(".menu-products .product-card, .products-grid .product-card").forEach(product => {
+        const category = product.dataset.category || "coffee";
+        const visible = filter === "all" || category === filter;
+        product.style.display = visible ? "" : "none";
+        product.classList.toggle("reveal", visible);
+    });
+}
+
+document.querySelectorAll(".filter-btn, .filter").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn, .filter").forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        applyFilter(button.dataset.filter);
+    });
+});
+
+
+/* =========================================
+   CONTACT FORM -> disimpan ke database
+========================================= */
+
+const contactForm = document.getElementById("contactForm");
+
+contactForm?.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        message: document.getElementById("message").value.trim()
+    };
+
+    if (!data.name || !data.email || !data.phone || !data.message) {
+        showNotification("Mohon lengkapi semua field.", "error");
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        showNotification("Format email tidak valid.", "error");
+        return;
+    }
+
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalLabel = submitButton.innerHTML;
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Mengirim... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+    try {
+        await api("/api/messages", { method: "POST", body: data });
+        contactForm.reset();
+        showNotification("Pesan terkirim! Kami akan segera membalas.");
+    } catch (error) {
+        if (error.status) {
+            showNotification(error.message, "error");
+        } else {
+            // Server tidak tersedia -> buka aplikasi email
+            const subject = encodeURIComponent(`Pesan dari ${data.name}`);
+            const body = encodeURIComponent(
+                `Nama: ${data.name}\nEmail: ${data.email}\nWhatsApp: ${data.phone}\n\n${data.message}`
+            );
+            window.location.href = `mailto:hello@handikaweb.com?subject=${subject}&body=${body}`;
+        }
+    } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalLabel;
+    }
+});
 
 
 /* =========================================
    NOTIFICATION
 ========================================= */
 
-function showNotification(text) {
+function showNotification(text, type = "success") {
+    document.querySelector(".notification")?.remove();
 
-    const oldNotification =
-        document.querySelector(
-            ".notification"
-        );
+    const notification = document.createElement("div");
+    notification.className = "notification" + (type === "error" ? " notification-error" : "");
+    notification.setAttribute("role", "status");
 
+    const icon = document.createElement("i");
+    icon.className = type === "error" ? "fa-solid fa-circle-exclamation" : "fa-solid fa-check";
 
-    if (oldNotification) {
+    const span = document.createElement("span");
+    span.textContent = text;
 
-        oldNotification.remove();
+    notification.append(icon, span);
+    document.body.appendChild(notification);
 
-    }
-
-
-    const notification =
-        document.createElement("div");
-
-
-    notification.className =
-        "notification";
-
-
-    notification.innerHTML = `
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>
-            ${text}
-        </span>
-
-    `;
-
-
-    document.body.appendChild(
-        notification
-    );
-
-
+    setTimeout(() => notification.classList.add("show"), 20);
     setTimeout(() => {
-
-        notification.classList.add(
-            "show"
-        );
-
-    }, 20);
-
-
-    setTimeout(() => {
-
-        notification.classList.remove(
-            "show"
-        );
-
-        setTimeout(() => {
-
-            notification.remove();
-
-        }, 300);
-
-    }, 2500);
-
+        notification.classList.remove("show");
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 
@@ -868,47 +736,17 @@ function showNotification(text) {
    SEARCH
 ========================================= */
 
-const searchButton =
-    document.getElementById(
-        "searchButton"
-    );
+const searchButton = document.getElementById("searchButton");
 
+searchButton?.addEventListener("click", () => {
+    const keyword = prompt("Cari menu Brew & Beans:");
+    if (keyword === null) return;
 
-searchButton?.addEventListener(
-    "click",
-    () => {
+    const search = keyword.trim().toLowerCase();
 
-        const keyword =
-            prompt(
-                "Cari menu Brew & Beans:"
-            );
+    document.querySelectorAll(".product-card").forEach(product => {
+        product.style.display = !search || product.innerText.toLowerCase().includes(search) ? "" : "none";
+    });
 
-
-        if (!keyword) return;
-
-
-        const products =
-            document.querySelectorAll(
-                ".product-card"
-            );
-
-
-        const search =
-            keyword.toLowerCase();
-
-
-        products.forEach(product => {
-
-            const text =
-                product.innerText.toLowerCase();
-
-
-            product.style.display =
-                text.includes(search)
-                    ? "block"
-                    : "none";
-
-        });
-
-    }
-);
+    if (search) document.querySelector(".products-grid, .menu-products")?.scrollIntoView({ behavior: "smooth" });
+});

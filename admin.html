@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Admin — Brew & Beans</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<section class="login-screen" id="loginScreen" hidden>
+    <form class="login-card" id="loginForm">
+        <a href="index.html" class="brand">
+            <span class="brand-icon">B</span>
+            <span>BREW <small>&</small> BEANS</span>
+        </a>
+        <h1>Admin Panel</h1>
+        <p class="muted">Masuk untuk mengelola pesanan, menu, dan pesan pelanggan.</p>
+
+        <label class="field">
+            <span>Username</span>
+            <input type="text" name="username" autocomplete="username" required>
+        </label>
+
+        <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+
+        <p class="form-error" id="loginError" role="alert"></p>
+
+        <button type="submit" class="btn btn-primary btn-block">
+            Masuk <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </form>
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<div class="app" id="app" hidden>
+
+    <aside class="sidebar">
+        <a href="index.html" class="brand" target="_blank" title="Buka website">
+            <span class="brand-icon">B</span>
+            <span>BREW <small>&</small> BEANS</span>
+        </a>
+
+        <nav class="side-nav" id="sideNav">
+            <button data-view="dashboard" class="active"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></button>
+            <button data-view="orders"><i class="fa-solid fa-receipt"></i><span>Pesanan</span><b class="nav-badge" id="ordersBadge" hidden></b></button>
+            <button data-view="products"><i class="fa-solid fa-mug-hot"></i><span>Menu</span></button>
+            <button data-view="messages"><i class="fa-solid fa-envelope"></i><span>Pesan</span><b class="nav-badge" id="messagesBadge" hidden></b></button>
+            <button data-view="account"><i class="fa-solid fa-user-gear"></i><span>Akun</span></button>
+        </nav>
+
+        <div class="side-footer">
+            <span class="muted" id="adminName"></span>
+            <button class="link-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+    </aside>
+
+    <main class="content">
+
+        <!-- DASHBOARD -->
+        <section class="view active" id="view-dashboard">
+            <header class="view-head">
+                <div>
+                    <p class="eyebrow">Ringkasan</p>
+                    <h2>Dashboard</h2>
+                </div>
+                <button class="btn btn-ghost" data-refresh><i class="fa-solid fa-rotate"></i> Muat ulang</button>
+            </header>
+
+            <div class="stat-grid">
+                <article class="stat-card">
+                    <span>Pendapatan hari ini</span>
+                    <strong id="statRevenueToday">-</strong>
+                    <small class="muted">Semua pesanan kecuali dibatalkan</small>
+                </article>
+                <article class="stat-card">
+                    <span>Pesanan hari ini</span>
+                    <strong id="statOrdersToday">-</strong>
+                </article>
+                <article class="stat-card accent">
+                    <span>Pesanan aktif</span>
+                    <strong id="statActive">-</strong>
+                    <small>Baru, diproses, & siap</small>
+                </article>
+                <article class="stat-card">
+                    <span>Pesan belum dibaca</span>
+                    <strong id="statUnread">-</strong>
+                </article>
+            </div>
+
+            <div class="panel-grid">
+                <article class="panel">
+                    <h3>Pesanan terbaru</h3>
+                    <div id="recentOrders" class="simple-list"></div>
+                </article>
+                <article class="panel">
+                    <h3>Menu terlaris</h3>
+                    <div id="topProducts" class="simple-list"></div>
+                </article>
+            </div>
+
+            <p class="muted small">Total pendapatan dari pesanan selesai: <b id="statRevenueAll">-</b></p>
+        </section>
+
+
+        <!-- PESANAN -->
+        <section class="view" id="view-orders">
+            <header class="view-head">
+                <div>
+                    <p class="eyebrow">Kelola</p>
+                    <h2>Pesanan</h2>
+                </div>
+                <input type="search" class="search" id="orderSearch" placeholder="Cari kode, nama, atau nomor...">
+            </header>
+
+            <div class="chips" id="orderFilters">
+                <button data-status="active" class="active">Aktif</button>
+                <button data-status="">Semua</button>
+                <button data-status="pending">Baru</button>
+                <button data-status="processing">Diproses</button>
+                <button data-status="ready">Siap</button>
+                <button data-status="completed">Selesai</button>
+                <button data-status="cancelled">Dibatalkan</button>
+            </div>
+
+            <div id="orderList" class="order-list"></div>
+        </section>
+
+
+        <!-- MENU -->
+        <section class="view" id="view-products">
+            <header class="view-head">
+                <div>
+                    <p class="eyebrow">Kelola</p>
+                    <h2>Menu</h2>
+                </div>
+                <button class="btn btn-primary" id="addProductBtn"><i class="fa-solid fa-plus"></i> Tambah Menu</button>
+            </header>
+
+            <div id="productList" class="product-admin-grid"></div>
+        </section>
+
+
+        <!-- PESAN -->
+        <section class="view" id="view-messages">
+            <header class="view-head">
+                <div>
+                    <p class="eyebrow">Kotak masuk</p>
+                    <h2>Pesan Pelanggan</h2>
+                </div>
+            </header>
+
+            <div id="messageList" class="message-list"></div>
+        </section>
+
+
+        <!-- AKUN -->
+        <section class="view" id="view-account">
+            <header class="view-head">
+                <div>
+                    <p class="eyebrow">Keamanan</p>
+                    <h2>Akun</h2>
+                </div>
+            </header>
+
+            <form class="panel narrow" id="passwordForm">
+                <h3>Ganti password</h3>
+                <label class="field">
+                    <span>Password lama</span>
+                    <input type="password" name="current_password" autocomplete="current-password" required>
+                </label>
+                <label class="field">
+                    <span>Password baru (min. 8 karakter)</span>
+                    <input type="password" name="new_password" minlength="8" autocomplete="new-password" required>
+                </label>
+                <label class="field">
+                    <span>Ulangi password baru</span>
+                    <input type="password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+                </label>
+                <button type="submit" class="btn btn-primary">Simpan password</button>
+            </form>
+        </section>
+
+    </main>
+</div>
+
+
+<!-- ================= MODAL MENU ================= -->
+
+<dialog class="modal" id="productModal">
+    <form method="dialog" id="productForm" class="modal-body">
+        <header class="modal-head">
+            <h3 id="productModalTitle">Tambah Menu</h3>
+            <button type="button" class="icon-btn" data-close-modal aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        </header>
+
+        <input type="hidden" name="id">
+
+        <div class="form-grid">
+            <label class="field span-2">
+                <span>Nama menu</span>
+                <input type="text" name="name" maxlength="80" required>
+            </label>
+
+            <label class="field">
+                <span>Kategori</span>
+                <select name="category" required>
+                    <option value="coffee">Coffee</option>
+                    <option value="noncoffee">Non Coffee</option>
+                    <option value="food">Food</option>
+                    <option value="dessert">Dessert</option>
+                </select>
+            </label>
+
+            <label class="field">
+                <span>Harga (Rp)</span>
+                <input type="number" name="price" min="0" step="500" required>
+            </label>
+
+            <label class="field span-2">
+                <span>Deskripsi</span>
+                <textarea name="description" rows="2" maxlength="300"></textarea>
+            </label>
+
+            <div class="field span-2">
+                <span>Foto</span>
+                <div class="image-input">
+                    <img id="imagePreview" alt="" hidden>
+                    <div>
+                        <input type="text" name="image" placeholder="Tempel URL gambar, atau upload di bawah">
+                        <label class="btn btn-ghost btn-sm upload-btn">
+                            <i class="fa-solid fa-upload"></i> Upload foto
+                            <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp" hidden>
+                        </label>
+                        <small class="muted">JPG/PNG/WEBP, otomatis diperkecil</small>
+                    </div>
+                </div>
+            </div>
+
+            <label class="field">
+                <span>Label (opsional)</span>
+                <input type="text" name="tag" maxlength="30" placeholder="BEST SELLER">
+            </label>
+
+            <label class="field">
+                <span>Urutan tampil</span>
+                <input type="number" name="sort_order" min="0" value="0">
+            </label>
+
+            <label class="check span-2">
+                <input type="checkbox" name="available" checked>
+                <span>Tersedia (tampil di website)</span>
+            </label>
+
+            <label class="check span-2">
+                <input type="checkbox" name="featured">
+                <span>Tampilkan di "Favorite Menu" halaman utama</span>
+            </label>
+        </div>
+
+        <p class="form-error" id="productError" role="alert"></p>
+
+        <footer class="modal-foot">
+            <button type="button" class="btn btn-ghost" data-close-modal>Batal</button>
+            <button type="submit" class="btn btn-primary" id="productSubmit">Simpan</button>
+        </footer>
+    </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="admin.js" defer></script>
+</body>
+</html>
